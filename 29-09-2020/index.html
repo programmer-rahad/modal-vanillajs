@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal using Vanilla Javascript ( 29-09-2020 )</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      section {
+        width: 100%;
+        height: 100vh;
+        background-image: url("7.jpg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        position: relative;
+        display: table;
+        padding: 15px;
+        z-index: 1;
+        /* transition: .5s; */
+        transition: 0.5s;
+      }
+
+      section:before {
+        position: absolute;
+        content: " ";
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: -1;
+      }
+
+      section .center {
+        color: #fff;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+      }
+
+      section .center h2 {
+        font-size: 40px;
+        font-family: sans-serif;
+      }
+
+      section .center button {
+        background-color: #5368f8;
+        border: 0;
+        color: #fff;
+        font-size: 20px;
+        margin-top: 10px;
+        cursor: pointer;
+        border-radius: 7px;
+        outline: 0;
+        font-family: cursive;
+        letter-spacing: 0.7px;
+        padding: 14px 30px;
+      }
+
+      .modal {
+        padding: 30px;
+        background: #fff;
+        color: #000;
+        font-family: Arial, sans-serif;
+        line-height: 24px;
+        font-size: 18px;
+        letter-spacing: 0.4px;
+        width: 60%;
+        padding-bottom: 65px;
+        border-radius: 8.5px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -100%);
+      }
+
+      .modal h3 {
+        font-size: 32px;
+        font-family: cursive;
+        margin-bottom: 15px;
+        transition-duration: 0.5s;
+      }
+
+      .modal p {
+        font-family: cursive;
+        font-size: 16px;
+        text-align: justify;
+      }
+      .modal:hover {
+        color: #a9b4fc;
+      }
+      .modal:hover h3 {
+        color: #6f81f5;
+      }
+
+      @media (max-width: 991px) {
+        .modal {
+          width: 75%;
+        }
+
+        section .center h2 {
+          margin-bottom: 20px;
+          font-size: 32px;
+          line-height: 40px;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .modal {
+          width: 95%;
+          padding: 20px;
+          padding-bottom: 60px;
+          font-size: 16px;
+          line-height: 22px;
+        }
+      }
+
+      span.close-btn {
+        font-size: 45px;
+        font-weight: 500;
+        position: absolute;
+        right: 20px;
+        bottom: 19px;
+        cursor: pointer;
+      }
+      span.close-btn:hover {
+        color: #5368f8;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section>
+      <div class="center">
+        <button class="modal-btn" type="button">Click to open the modal</button>
+      </div>
+    </section>
+
+    <div class="modal">
+      <h3>Modal Title</h3>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis itaque
+        assumenda voluptatibus dolorum unde error cumque magnam exercitationem
+        suscipit alias qui ipsa, ex, quidem tenetur deleniti maiores odit
+        impedit facere esse atque eligendi commodi. Iure atque saepe quas ullam
+        provident perferendis repudiandae et ex? Quidem a laboriosam facere
+        accusantium minima excepturi itaque doloribus! Non deserunt laudantium
+        voluptas veritatis velit, nobis libero odit corporis blanditiis ad,
+        distinctio possimus eum accusantium sapiente recusandae quaerat
+      </p>
+      <span class="close-btn" draggable="true">&times;</span>
+    </div>
+
+    <script>
+      // Add, Toggle, Remove Classes
+      const addClass = (el, ...classes) => el.classList.add(...classes);
+      const removeClass = (el, ...classes) => el.classList.remove(...classes);
+      const toggleClass = (el, className) => el.classList.toggle(className);
+
+      // Variables
+      const section = document.querySelector("section");
+      const modal = document.querySelector(".modal");
+      const modalBtn = document.querySelector(".modal-btn");
+      const modalCloseBtn = document.querySelector(".close-btn");
+
+      // Function: Hide Modal
+      const hideModal = () => {
+        section.style.filter = "blur(0px)";
+        const hide = {
+          transition: ".35s",
+          transform: "translate(-50%, -50%) scale(0)",
+        };
+        Object.assign(modal.style, hide);
+        setTimeout(() => {
+          const reset = {
+            transition: "none",
+            top: 0,
+            transform: "translate(-50%, -100%) scale(1)",
+          };
+          Object.assign(modal.style, reset);
+        }, 350);
+      };
+
+      modalCloseBtn.addEventListener("click", hideModal);
+      window.addEventListener("keydown", (e) => {
+        if (e.code === "Escape") {
+          hideModal();
+        }
+      });
+
+      section.addEventListener("click", function (e) {
+        if (e.target.className == "modal-btn") {
+          const show = {
+            transition: "1s",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+          };
+          Object.assign(modal.style, show);
+          section.style.filter = "blur(4px)";
+        } else {
+          hideModal();
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head> 
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+
+    <title>Modal using vanilla js ( 10-03-2021 )</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      a {
+        text-decoration: none;
+      }
+      ::after,
+      ::before {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .wrapper a {
+        border: 1px solid;
+        padding: 10px 28px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-family: cursive;
+        font-size: 20px;
+        letter-spacing: 2px;
+        transition-duration: 0.45s;
+      }
+      .wrapper a:hover {
+        color: #fff;
+        background-color: #000;
+        border-color: #000;
+      }
+      .image-popup-wrapper {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 99999;
+        background: rgba(0, 0, 0, 0.95);
+        text-align: center;
+      }
+
+      .image-popup-wrapper > div {
+        display: inline-block;
+        text-align: right;
+        margin-top: 50vh;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
+        max-width: 60%;
+      }
+
+      @media (max-width: 991px) {
+        .image-popup-wrapper > div {
+          max-width: 70%;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .image-popup-wrapper > div {
+          max-width: 90%;
+        }
+      }
+
+      .image-popup-wrapper > div img {
+        display: block;
+      }
+
+      .image-popup-wrapper > div a.close-image-popup {
+        position: relative;
+        width: 25px;
+        height: 25px;
+        margin-top: 10px;
+        margin-right: -3px;
+      }
+
+      .image-popup-wrapper > div a.close-image-popup::after,
+      .image-popup-wrapper > div a.close-image-popup::before {
+        position: absolute;
+        width: 25px;
+        height: 3px;
+        content: " ";
+        background-color: #fff;
+        left: 0;
+        top: 50%;
+        -webkit-transform: translateY(-50%) rotate(45deg);
+        transform: translateY(-50%) rotate(45deg);
+      }
+
+      .image-popup-wrapper > div a.close-image-popup::after {
+        -webkit-transform: translateY(-50%) rotate(-45deg);
+        transform: translateY(-50%) rotate(-45deg);
+      }
+
+      .custom-modal-wrapper {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        top: 0;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        display: none;
+      }
+
+      .custom-modal-wrapper.open {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+      }
+
+      .custom-modal-wrapper > div {
+        max-width: 60%;
+        padding: 20px 30px 25px;
+        background-color: #fff;
+        position: relative;
+        border-radius: 8.5px;
+      }
+      .custom-modal-wrapper h3 {
+        font-family: cursive;
+        margin-bottom: 7px;
+        font-size: 26px;
+      }
+      .custom-modal-wrapper p {
+        line-height: 1.45;
+        font-size: 16px;
+        letter-spacing: 0.4px;
+        text-align: justify;
+        /* font-family: Arial, Helvetica, sans-serif; */
+        font-family: cursive;
+      }
+
+      @media (max-width: 991px) {
+        .custom-modal-wrapper > div {
+          max-width: 70%;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .custom-modal-wrapper > div {
+          max-width: 80%;
+        }
+      }
+
+      @media (max-width: 575px) {
+        .custom-modal-wrapper > div {
+          max-width: 90%;
+        }
+      }
+
+      .custom-modal-wrapper > div a.close-modal {
+        position: absolute;
+        width: 27px;
+        right: 0;
+        top: calc(100% + 20px);
+        height: 22px;
+      }
+
+      .custom-modal-wrapper > div a.close-modal:before,
+      .custom-modal-wrapper > div a.close-modal:after {
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        content: " ";
+        background-color: #fff;
+        top: 50%;
+        margin-top: -1.5px;
+      }
+
+      .custom-modal-wrapper > div a.close-modal:before {
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+      }
+
+      .custom-modal-wrapper > div a.close-modal:after {
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <a href="#">Click Here</a>
+    </div>
+    <div class="custom-modal-wrapper">
+      <div>
+        <h3>Modal Title</h3>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa,
+          repellat cumque esse vel ea, repellendus asperiores, suscipit dolore
+          voluptatibus pariatur id vero repudiandae reprehenderit voluptas quae
+          libero. Sint, illum? Sunt, architecto tempora molestiae aspernatur
+          corrupti optio nostrum perferendis est voluptatem! Illo adipisci
+          voluptate sint ex accusamus dolores voluptates obcaecati ipsam!
+        </p>
+        <a href="#" class="close-modal"></a>
+      </div>
+    </div>
+
+    <script>
+      !(function () {
+        // Custom Modal
+        const $ = (selector, areAll) => {
+          const all = document.querySelectorAll(selector);
+          const single = document.querySelector(selector);
+          return areAll ? all : single;
+        };
+        const modalWrapper = $(".custom-modal-wrapper");
+
+        // Close Popup
+        const closeBtn = $(".custom-modal-wrapper a.close-modal");
+        closeBtn.addEventListener("click", () => {
+          modalWrapper.classList.remove("open");
+        });
+        window.addEventListener("keyup", (e) => {
+          if (e.keyCode === 27) {
+            modalWrapper.classList.remove("open");
+          }
+        });
+        // Open Popup
+        const target = $("a");
+        target.addEventListener("click", (e) => {
+          e.preventDefault();
+          modalWrapper.classList.add("open");
+        });
+      })();
+    </script>
+  </body>
+</html>
